@@ -275,8 +275,8 @@ int main(int argc, char* argv[])
 
 	/******** read mode, text and key *******/ 
 	char* mode = argv[1];
-	uint16_t text = (uint16_t)strtol(argv[2], NULL, 16);
-	uint16_t key0 = (uint16_t)strtol(argv[3], NULL, 16);
+	uint16_t key0 = (uint16_t)strtol(argv[2], NULL, 16);
+	uint16_t text = (uint16_t)strtol(argv[3], NULL, 16);
 
 	/******** print entered text and key *******/
 	printf("text = 0x%X\n", text);
