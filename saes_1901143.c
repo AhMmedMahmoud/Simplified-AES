@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #define ENCRYPT  0
 #define DECRYPT 1
@@ -268,33 +269,53 @@ uint16_t DEC(uint16_t Ciphertext, uint16_t key0)
 
 int main(int argc, char* argv[])
 {
+	/******* check number of passed agrguments *******/
 	if (argc != 4) {
 		printf("invalid arguments\n");
 		return -1;
 	}
 
-	/******** read mode, text and key *******/ 
+	/******** read mode and check it *******/ 
 	char* mode = argv[1];
-	uint16_t key0 = (uint16_t)strtol(argv[2], NULL, 16);
-	uint16_t text = (uint16_t)strtol(argv[3], NULL, 16);
+	if(!((strcmp(mode, "ENC") == 0) || (strcmp(mode, "DEC") == 0)))
+	{
+		printf("invalid argument, expected ENC or DEC\n");
+		return -1;
+	}
+	
+	/*******  read key and check it *******/
+	char* endptr;
+	uint16_t key0 = (uint16_t)strtol(argv[2], &endptr, 16);
+	if (errno == EINVAL || *endptr != '\0') {
+        printf("Invalid key argument: %s is not a hexadecimal number\n", argv[2]);
+        return -1;
+    }
+
+	
+	/*******  text key and check it *******/
+	uint16_t text = (uint16_t)strtol(argv[3], &endptr, 16);
+	if (errno == EINVAL || *endptr != '\0') {
+        printf("Invalid text argument: %s is not a hexadecimal number\n", argv[3]);
+        return -1;
+    }
 
 	/******** print entered text and key *******/
-	printf("text = 0x%X\n", text);
-	printf("key = 0x%X\n", key0);
+	printf("text = 0x%04X\n", text);
+	printf("key = 0x%04X\n", key0);
 	printf("-------------------\n");
 	
 	/******** preform encryption *******/
 	if (strcmp(mode, "ENC") == 0)
 	{
 		uint16_t encry_output = ENC(text, key0);
-		printf("encryption = 0x%X\n", encry_output);
+		printf("encryption = 0x%04X\n", encry_output);
 	}
 	/******** preform decryption *******/
 	else if (strcmp(mode, "DEC") == 0)
 	{
 		uint16_t decry_output = DEC(text, key0);
-		printf("decryption = 0x%X\n", decry_output);
+		printf("decryption = 0x%04X\n", decry_output);
 	}
-	
+
 	return 0;
 }
