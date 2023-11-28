@@ -290,9 +290,8 @@ int main(int argc, char* argv[])
         printf("Invalid key argument: %s is not a hexadecimal number\n", argv[2]);
         return -1;
     }
-
 	
-	/*******  text key and check it *******/
+	/*******  read text and check it *******/
 	uint16_t text = (uint16_t)strtol(argv[3], &endptr, 16);
 	if (errno == EINVAL || *endptr != '\0') {
         printf("Invalid text argument: %s is not a hexadecimal number\n", argv[3]);
